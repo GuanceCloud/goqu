@@ -86,6 +86,8 @@ func (esg *expressionSQLGenerator) Generate(b sb.SQLBuilder, val interface{}) {
 	switch v := val.(type) {
 	case exp.Expression:
 		esg.expressionSQL(b, v)
+	case *exp.Placeholder:
+		esg.literalPlaceholder(b)
 	case int:
 		esg.literalInt(b, int64(v))
 	case int32:
@@ -275,6 +277,11 @@ func (esg *expressionSQLGenerator) lateralExpressionSQL(b sb.SQLBuilder, le exp.
 	}
 	b.Write(esg.dialectOptions.LateralFragment)
 	esg.Generate(b, le.Table())
+}
+
+// Generates prepared parameter placeholder, '?' or '$1'
+func (esg *expressionSQLGenerator) literalPlaceholder(b sb.SQLBuilder) {
+	esg.placeHolderSQL(b, nil)
 }
 
 // Generates SQL NULL value

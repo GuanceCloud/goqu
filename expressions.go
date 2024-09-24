@@ -18,6 +18,9 @@ type (
 // emptyWindow is an empty WINDOW clause without name
 var emptyWindow = exp.NewWindowExpression(nil, nil, nil, nil)
 
+// PH a default exp.Placeholder instance for convenient usage
+var PH = exp.PH
+
 const (
 	Wait       = exp.Wait
 	NoWait     = exp.NoWait
