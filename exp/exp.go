@@ -393,6 +393,11 @@ type (
 		Literal() string
 		// Arguments to be replaced within the sql
 		Args() []interface{}
+		// SetPrepared sets whether args in this literal should be interpolated,
+		// it overrides the dataset's setting.
+		SetPrepared(b bool) LiteralExpression
+		// IsPrepared indicates whether args in this literal should be interpolated.
+		IsPrepared() bool
 	}
 
 	NullSortType  int

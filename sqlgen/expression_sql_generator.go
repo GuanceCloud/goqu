@@ -75,6 +75,13 @@ func (esg *expressionSQLGenerator) Dialect() string {
 
 var valuerReflectType = reflect.TypeOf((*driver.Valuer)(nil)).Elem()
 
+func (esg *expressionSQLGenerator) GenerateForcePrepared(b sb.SQLBuilder, val interface{}, prepared bool) {
+	old := b.IsPrepared()
+	b.SetPrepared(prepared)
+	defer b.SetPrepared(old)
+	esg.Generate(b, val)
+}
+
 func (esg *expressionSQLGenerator) Generate(b sb.SQLBuilder, val interface{}) {
 	if b.Error() != nil {
 		return
@@ -543,7 +550,11 @@ func (esg *expressionSQLGenerator) literalExpressionSQL(b sb.SQLBuilder, literal
 		currIndex := 0
 		for _, char := range l {
 			if char == replacementRune && currIndex < argsLen {
-				esg.Generate(b, args[currIndex])
+				if b.IsPrepared() != literal.IsPrepared() {
+					esg.GenerateForcePrepared(b, args[currIndex], literal.IsPrepared())
+				} else {
+					esg.Generate(b, args[currIndex])
+				}
 				currIndex++
 			} else {
 				b.WriteRunes(char)

@@ -2,8 +2,9 @@ package exp
 
 type (
 	literal struct {
-		literal string
-		args    []interface{}
+		literal    string
+		args       []interface{}
+		isPrepared bool
 	}
 )
 
@@ -78,3 +79,8 @@ func (l literal) BitwiseLeftShift(val interface{}) BitwiseExpression { return bi
 func (l literal) BitwiseRightShift(val interface{}) BitwiseExpression {
 	return bitwiseRightShift(l, val)
 }
+func (l literal) SetPrepared(b bool) LiteralExpression {
+	l.isPrepared = b
+	return l
+}
+func (l literal) IsPrepared() bool { return l.isPrepared }

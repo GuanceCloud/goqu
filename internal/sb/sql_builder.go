@@ -13,6 +13,7 @@ type (
 		Write(p []byte) SQLBuilder
 		WriteStrings(ss ...string) SQLBuilder
 		WriteRunes(r ...rune) SQLBuilder
+		SetPrepared(t bool) SQLBuilder
 		IsPrepared() bool
 		CurrentArgPosition() int
 		ToSQL() (sql string, args []interface{}, err error)
@@ -70,6 +71,11 @@ func (b *sqlBuilder) WriteRunes(rs ...rune) SQLBuilder {
 			b.buf.WriteRune(r)
 		}
 	}
+	return b
+}
+
+func (b *sqlBuilder) SetPrepared(t bool) SQLBuilder {
+	b.isPrepared = t
 	return b
 }
 
